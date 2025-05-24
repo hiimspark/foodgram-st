@@ -74,11 +74,11 @@ jobs:
     - name: Install dependencies
       run: |
         cd frontend/
-        npm install
+        yarn install
     - name: Test frontend
       run: |
         cd frontend/
-        npm run test
+        yarn run test
 
   build_frontend_and_push_to_docker_hub:
     name: Push frontend Docker image to DockerHub
