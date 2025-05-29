@@ -1,13 +1,14 @@
 from rest_framework import viewsets, status
-from users.models import User, Sub
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from djoser.serializers import SetPasswordSerializer
+
 from .serializers import UserSerializer, UserRegistrationSerializer
 from .serializers import AvatarSerializer
 from .serializers import CreateSubSerializer, SubSerializer
-from api.pagination import FoodgramPagination
+from users.models import User, Sub
+from utils.pagination import FoodgramPagination
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -98,6 +99,13 @@ class UserViewSet(viewsets.ModelViewSet):
             permission_classes=[IsAuthenticated])
     def subscribe(self, request, pk):
         if request.method == "POST":
+            sub_to = User.objects.filter(pk=pk)
+            if not sub_to.exists():
+                return Response(
+                    "Нельзя подписаться на несуществующего пользователя!",
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
             if (int(pk) == request.user.id):
                 return Response(
                     "Нельзя подписаться на самого себя!",
@@ -111,13 +119,6 @@ class UserViewSet(viewsets.ModelViewSet):
                 return Response(
                     "Вы уже подписаны на этого пользователя!",
                     status=status.HTTP_400_BAD_REQUEST,
-                )
-
-            sub_to = User.objects.filter(pk=pk)
-            if not sub_to.exists():
-                return Response(
-                    "Нельзя подписаться на несуществующего пользователя!",
-                    status=status.HTTP_404_NOT_FOUND,
                 )
 
             serializer = CreateSubSerializer(
@@ -161,10 +162,8 @@ class UserViewSet(viewsets.ModelViewSet):
             detail=False,
             permission_classes=[IsAuthenticated])
     def subscriptions(self, request):
-        subs = Sub.objects.filter(
-            sub_from=self.request.user).order_by('sub_to__username')
         subscribed_users = User.objects.filter(
-            id__in=subs.values_list('sub_to', flat=True))
+            sub_to__sub_from=request.user).order_by('username')
         pages = self.paginate_queryset(subscribed_users)
         serializer = SubSerializer(
             pages, many=True, context={'request': request})

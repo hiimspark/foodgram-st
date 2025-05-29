@@ -1,0 +1,16 @@
+DEFAULT_PAGE_SIZE = 6
+INGREDIENT_MAX_LEN = 100
+MEASUREMENT_UNIT_MAX_LEN = 20
+RECIPE_MAX_LEN = 256
+SHORTLINK_CODE_LEN = 10
+RECIPE_COOKING_TIME_LEN = 1
+RECIPEINGREDIENT_AMOUNT_LEN = 1
+EMAIL_LEN = 254
+USER_NAMES_LEN = 150
+RECIPE_COOKING_TIME_VALIDATOR = 'Время приготовления должно быть >= 1'
+RECIPEINGREDIENT_AMOUNT_VALIDATOR = 'Количество (вес, и т.д.) данного '
+'ингредиента должно быть >= 1'
+AVATAR_UPLOAD_PATH = 'avatars/'
+USERNAME_VALIDATOR_REGEX = r'^[\w.@+-]+\Z'
+USERNAME_VALIDATOR_MESSAGE = 'Уникальный юзернейм может содержать только '
+'буквы, цифры и @/./+/-/_'

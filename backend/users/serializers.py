@@ -1,6 +1,7 @@
 from rest_framework import serializers
+from drf_extra_fields.fields import Base64ImageField
+
 from users.models import User, Sub
-from api.serializers import DecodeBase64ImageField
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -33,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class AvatarSerializer(serializers.ModelSerializer):
-    avatar = DecodeBase64ImageField(required=True)
+    avatar = Base64ImageField()
 
     class Meta:
         model = User
@@ -63,7 +64,6 @@ class SubSerializer(UserSerializer):
 
 
 class CreateSubSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Sub
         fields = ("sub_to", "sub_from")
